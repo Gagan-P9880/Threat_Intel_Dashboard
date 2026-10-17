@@ -21,15 +21,6 @@ python -m http.server 8000
 
 Then open `http://localhost:8000`.
 
-## Publish with GitHub Pages
-
-1. Create an empty GitHub repository and push this project.
-2. In the repository, open **Settings → Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**, select the default branch and `/ (root)`, then save.
-4. Open the Pages URL GitHub provides.
-
-The repository is ready for a later push; no remote or credentials are configured here.
-
 ## Data and refresh behavior
 
 The dashboard first requests CISA's JSON catalog and falls back to the CISA-maintained [`cisagov/kev-data`](https://github.com/cisagov/kev-data) mirror if the primary endpoint is unavailable. The mirror is updated when CISA changes the catalog and is expected to synchronize shortly afterward. Five-minute polling checks for catalog changes; it does not mean new threat observations arrive every five minutes. The catalog itself is generally updated on weekdays when there are new or changed entries.
