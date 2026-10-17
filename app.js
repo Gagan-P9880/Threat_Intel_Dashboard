@@ -122,12 +122,12 @@ function renderRows(entries) {
     const ransomware = entry.knownRansomwareCampaignUse === 'Known';
     const dueClass = dateOnly(entry.dueDate) && dateOnly(entry.dueDate) < new Date() ? ' style="color:#ef9999"' : '';
     return `<tr>
-      <td><a class="cve-link" href="https://www.cve.org/CVERecord?id=${encodeURIComponent(entry.cveID || '')}" target="_blank" rel="noreferrer">${cve}</a><span class="vuln-name" title="${escapeHtml(entry.vulnerabilityName || '')}">${escapeHtml(entry.vulnerabilityName || entry.shortDescription || 'Known exploited vulnerability')}</span></td>
-      <td><span class="vendor-name">${escapeHtml(entry.vendorProject || 'Unknown')}</span><span class="product-name">${escapeHtml(entry.product || '—')}</span></td>
-      <td class="date-cell">${formatDate(entry.dateAdded)}</td>
-      <td>${ransomware ? '<span class="ransomware-badge">RANSOMWARE</span>' : '<span class="no-ransomware">No known use</span>'}</td>
-      <td class="date-cell"${dueClass}>${formatDate(entry.dueDate)}</td>
-      <td><button class="row-detail" title="Open CVE record" aria-label="Open ${cve}" data-cve="${cve}">↗</button></td>
+      <td class="cell-vulnerability" data-label="Vulnerability"><a class="cve-link" href="https://www.cve.org/CVERecord?id=${encodeURIComponent(entry.cveID || '')}" target="_blank" rel="noreferrer">${cve}</a><span class="vuln-name" title="${escapeHtml(entry.vulnerabilityName || '')}">${escapeHtml(entry.vulnerabilityName || entry.shortDescription || 'Known exploited vulnerability')}</span></td>
+      <td class="cell-vendor" data-label="Vendor / product"><span class="vendor-name">${escapeHtml(entry.vendorProject || 'Unknown')}</span><span class="product-name">${escapeHtml(entry.product || '—')}</span></td>
+      <td class="date-cell cell-added" data-label="Added to CISA catalog">${formatDate(entry.dateAdded)}</td>
+      <td class="cell-ransomware" data-label="Ransomware use">${ransomware ? '<span class="ransomware-badge">Known</span>' : '<span class="no-ransomware">Not confirmed</span>'}</td>
+      <td class="date-cell cell-due" data-label="Remediation due date"${dueClass}>${formatDate(entry.dueDate)}</td>
+      <td class="cell-action"><button class="row-detail" title="Open CVE record" aria-label="Open ${cve} record" data-cve="${cve}">↗</button></td>
     </tr>`;
   }).join('');
 }
@@ -158,6 +158,7 @@ function render() {
   const monthCount = state.entries.filter((entry) => String(entry.dateAdded || '').startsWith(monthPrefix)).length;
   $('#metric-total').textContent = Number(state.catalog.count || state.entries.length).toLocaleString();
   $('#metric-month').textContent = monthCount.toLocaleString();
+  $('#month-label').textContent = `Added in ${new Intl.DateTimeFormat('en', { month: 'long', timeZone: 'UTC' }).format(now)} (UTC)`;
   $('#metric-ransomware').textContent = ransomwareCount.toLocaleString();
   $('#metric-freshness').textContent = ageLabel(state.cachedAt || Date.now());
   $('#ransomware-progress').style.width = `${state.entries.length ? Math.min(100, ransomwareCount / state.entries.length * 100) : 0}%`;
@@ -185,7 +186,7 @@ function tickClock() {
   $('#footer-year').textContent = new Date().getUTCFullYear();
   if (state.catalog && state.cachedAt) $('#metric-freshness').textContent = ageLabel(state.cachedAt);
 }
-$('#search-input').addEventListener('input', (event) => { state.query = event.target.value; renderRows(filteredEntries()); $('#visible-count').textContent = filteredEntries().length.toLocaleString(); $('#result-summary').textContent = `Showing ${Math.min(filteredEntries().length, 250).toLocaleString()} of ${filteredEntries().length.toLocaleString()} matching · ${state.entries.length.toLocaleString()} total`; });
+$('#search-input').addEventListener('input', (event) => { state.query = event.target.value; const matching = filteredEntries(); renderRows(matching); $('#visible-count').textContent = matching.length.toLocaleString(); $('#result-summary').textContent = `Showing ${Math.min(matching.length, 250).toLocaleString()} of ${matching.length.toLocaleString()} matching · ${state.entries.length.toLocaleString()} total`; });
 $('#vendor-filter').addEventListener('change', (event) => { state.vendor = event.target.value; render(); });
 $('#sort-filter').addEventListener('change', (event) => { state.sort = event.target.value; renderRows(filteredEntries()); });
 $('#refresh-button').addEventListener('click', () => refresh({ manual: true }));
