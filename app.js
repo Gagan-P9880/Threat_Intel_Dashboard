@@ -191,6 +191,17 @@ $('#vendor-filter').addEventListener('change', (event) => { state.vendor = event
 $('#sort-filter').addEventListener('change', (event) => { state.sort = event.target.value; renderRows(filteredEntries()); });
 $('#refresh-button').addEventListener('click', () => refresh({ manual: true }));
 $('#export-button').addEventListener('click', exportCsv);
+function setActiveNav(hash) {
+  document.querySelectorAll('.sidebar .nav-item').forEach((link) => {
+    const active = link.getAttribute('href') === hash;
+    link.classList.toggle('active', active);
+    if (active) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
+}
+document.querySelectorAll('.sidebar .nav-item').forEach((link) => link.addEventListener('click', () => setActiveNav(link.getAttribute('href'))));
+window.addEventListener('hashchange', () => setActiveNav(window.location.hash || '#about'));
+setActiveNav(window.location.hash || '#about');
 $('#ransomware-shortcut').addEventListener('click', () => { state.onlyRansomware = !state.onlyRansomware; $('#ransomware-shortcut').textContent = state.onlyRansomware ? 'Clear filter ↗' : 'View entries ↗'; render(); document.querySelector('.feed-panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 $('#vulnerability-rows').addEventListener('click', (event) => { const button = event.target.closest('.row-detail'); if (button) window.open(`https://www.cve.org/CVERecord?id=${encodeURIComponent(button.dataset.cve)}`, '_blank', 'noopener,noreferrer'); });
 document.addEventListener('keydown', (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); $('#search-input').focus(); } });

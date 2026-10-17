@@ -15,12 +15,13 @@
   <body>
     <div class="app-shell">
       <aside class="sidebar">
-        <a class="brand" href="#top" aria-label="Signal home"><span class="brand-mark"><i></i><i></i><i></i></span><span>SIGNAL<span class="brand-slash">/</span></span></a>
+        <a class="brand" href="#about" aria-label="Signal guide"><span class="brand-mark"><i></i><i></i><i></i></span><span>SIGNAL<span class="brand-slash">/</span></span></a>
         <div class="workspace-label">WORKSPACE <span>01</span></div>
         <nav aria-label="Main navigation">
-          <a class="nav-item active" href="#overview"><span class="nav-icon">◫</span> Overview <span class="nav-pip"></span></a>
-          <a class="nav-item" href="#feed"><span class="nav-icon">⌁</span> Intelligence feed</a>
-          <a class="nav-item" href="#sources"><span class="nav-icon">◎</span> Data sources</a>
+          <a class="nav-item active" href="#about" aria-current="page" title="About this dashboard"><span class="nav-icon">ⓘ</span> About <span class="nav-pip"></span></a>
+          <a class="nav-item" href="#overview" title="Dashboard metrics"><span class="nav-icon">◫</span> Dashboard</a>
+          <a class="nav-item" href="#feed" title="Search the vulnerability watchlist"><span class="nav-icon">⌁</span> Watchlist</a>
+          <a class="nav-item" href="#sources" title="View data source status"><span class="nav-icon">◎</span> Sources</a>
         </nav>
         <div class="sidebar-bottom">
           <div class="source-mini"><div class="source-mini-icon">C</div><div><strong>CISA KEV</strong><small>Public catalog</small></div><span class="mini-status" id="sidebar-status"></span></div>
@@ -30,7 +31,30 @@
       </aside>
 
       <main id="top">
-        <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <b>Overview</b></div><div class="topbar-right"><span class="utc-clock" id="clock">--:--:-- UTC</span><span class="top-separator"></span><span class="live-label"><i></i> LIVE MONITORING</span><button id="refresh-button" class="icon-button" title="Refresh data" aria-label="Refresh data">↻</button></div></header>
+        <header class="topbar"><div class="breadcrumb">SIGNAL <span>/</span> <b>Field guide</b></div><div class="topbar-right"><span class="utc-clock" id="clock">--:--:-- UTC</span><span class="top-separator"></span><span class="live-label"><i></i> CATALOG CHECKS EVERY 5 MIN</span><button id="refresh-button" class="icon-button" title="Refresh data" aria-label="Refresh data">↻</button></div></header>
+
+        <section class="welcome-page" id="about" aria-labelledby="welcome-title">
+          <div class="welcome-hero"><div class="eyebrow"><span class="eyebrow-line"></span> YOUR THREAT INTELLIGENCE FIELD GUIDE</div><h1 id="welcome-title">Know what to look for<span class="heading-period">.</span></h1><p class="welcome-lede">Signal turns CISA’s Known Exploited Vulnerabilities catalog into a practical watchlist, so security teams can quickly find vulnerabilities attackers are known to exploit and decide what to investigate first.</p><div class="welcome-actions"><a class="primary-link" href="#overview">Explore the dashboard <span>↓</span></a><a class="text-link" href="#field-guide">Learn what each field means <span>↓</span></a></div><div class="welcome-note"><span class="note-dot"></span><strong>Good to know</strong><span>This is a live catalog view, not a sensor detecting attacks on your own network. CISA controls when entries are added.</span></div></div>
+          <div class="guide-cards" aria-label="How to use Signal">
+            <article class="guide-card"><span class="guide-card-number">01</span><h2>See the current picture</h2><p>Start with catalog totals and recent additions. The feed status tells you whether the data is live or cached.</p></article>
+            <article class="guide-card"><span class="guide-card-number">02</span><h2>Find what affects you</h2><p>Search by CVE, vendor, or product. Filter the watchlist, then open a CVE record for more detail.</p></article>
+            <article class="guide-card"><span class="guide-card-number">03</span><h2>Prioritize and share</h2><p>Review ransomware-linked entries and CISA due dates, validate against your asset inventory, and export matching rows to CSV.</p></article>
+          </div>
+          <div class="field-guide" id="field-guide"><div class="field-guide-heading"><div><div class="section-kicker">QUICK REFERENCE</div><h2>What the fields mean</h2></div><p>Definitions for the dashboard cards and watchlist.</p></div><div class="field-guide-grid">
+            <article><span class="field-tag">SUMMARY</span><h3>Known exploited</h3><p>Total number of vulnerabilities currently listed in CISA’s KEV catalog.</p></article>
+            <article><span class="field-tag">SUMMARY</span><h3>Added this month</h3><p>Entries whose CISA “date added” falls in the current UTC calendar month.</p></article>
+            <article><span class="field-tag">SUMMARY</span><h3>Ransomware linked</h3><p>Entries CISA marks as known to be used in ransomware campaigns. “Not confirmed” does not prove it has never happened.</p></article>
+            <article><span class="field-tag">SUMMARY</span><h3>Data freshness</h3><p>Time since this browser last fetched the catalog successfully. The five-minute timer checks for source changes; it does not mean CISA publishes new entries every five minutes.</p></article>
+            <article><span class="field-tag">WATCHLIST</span><h3>Vulnerability</h3><p>The CVE identifier and vulnerability name. Select the CVE to open its record at CVE.org.</p></article>
+            <article><span class="field-tag">WATCHLIST</span><h3>Vendor / product</h3><p>The vendor and affected product named in the CISA catalog. Compare them with software you use.</p></article>
+            <article><span class="field-tag">WATCHLIST</span><h3>Added to CISA catalog</h3><p>The date CISA added the vulnerability to KEV. It is not necessarily the date the flaw was discovered.</p></article>
+            <article><span class="field-tag">WATCHLIST</span><h3>Ransomware use</h3><p>“Known” means CISA lists confirmed ransomware campaign use. “Not confirmed” means CISA has no known confirmation in this field.</p></article>
+            <article><span class="field-tag">WATCHLIST</span><h3>Remediation due date</h3><p>The due date published by CISA for remediation. Use it as a prioritization reference and check your organization’s applicable requirements.</p></article>
+            <article><span class="field-tag">CHART</span><h3>Added over time</h3><p>How many catalog entries were added on each of the last 30 days. Empty bars mean no additions on that date.</p></article>
+            <article><span class="field-tag">SOURCE</span><h3>Feed status &amp; release</h3><p>Live means a public feed responded. Cached means the latest saved copy is shown while the feed is unavailable. Catalog release is CISA’s release date.</p></article>
+            <article><span class="field-tag">TOOLS</span><h3>Search, filters &amp; export</h3><p>Search CVE, vendor, or product; filter by vendor; sort results; or export the matching list as a CSV file.</p></article>
+          </div></div>
+        </section>
 
         <section class="page-heading" id="overview"><div><div class="eyebrow"><span class="eyebrow-line"></span> THREAT INTELLIGENCE / OVERVIEW</div><h1>Signal, in real time<span class="heading-period">.</span></h1><p class="page-subtitle">CISA’s catalog of vulnerabilities known to be exploited in the wild.</p></div><div class="heading-meta"><div class="meta-caption">CATALOG RELEASE</div><div class="release-date" id="catalog-date">Loading…</div><div class="updated-time" id="updated-at">Connecting to CISA feed</div></div></section>
 
